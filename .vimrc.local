@@ -1,4 +1,140 @@
-" Color schema
-color molokai
+" jj to escape
+:imap jj <Esc>
 
-let NERDTreeShowHidden = 1
+" easily open my .vimrc file
+nnoremap <leader>ev <C-w><C-v><C-l>:e ~/.vimrc.local<cr>
+
+" Clear highlights
+nnoremap <esc> :noh<return><esc>
+
+" open a new vertical split with <leader>w"
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" make this the only split
+nnoremap <leader>o :only<cr>
+
+" view the alternate file
+nnoremap <leader>a :AV<cr>
+nnoremap <leader>dt :!bundle exec rake db:test:clone<cr>
+nnoremap <leader>db :!bundle exec rake db:migrate<cr>
+nnoremap <leader><tab> :Scratch<cr>
+nnoremap <silent> <F3> :YRShow<cr>
+inoremap <silent> <F3> <ESC>:YRShow<cr>
+
+autocmd cursorhold * set nohlsearch 
+autocmd cursormoved * set hlsearch
+
+" Map n, N (for next, prev search) to go to the next found keyword & center it
+" on the middle line"
+nmap n nzz
+nmap N Nzz
+
+" Ruby
+imap <C-l> <Space>=><Space>
+
+" Hit space instead of colon to get into command mode
+nnoremap <Space> :
+
+" Open new vertical split windows to the right
+set splitright
+
+" Open new horizontal split windows below current
+set splitbelow
+
+" Tab mappings.
+map <leader>tn :tabnew<cr>
+map <leader>te :tabedit
+map <leader>w :tabclose<cr>
+map <leader>to :tabonly<cr>
+map <leader>tn :tabnext
+map <leader>tp :tabprevious<cr>
+map <leader>tf :tabfirst<cr>
+map <leader>tl :tablast<cr>
+map <leader>tm :tabmove
+
+" Enable nice colors
+let NERDChristmasTree = 1
+
+" Make it easy to see where we are
+let NERDTreeHighlightCursorline = 1
+
+" Make bookmarks visible
+let NERDTreeShowBookmarks = 1
+
+" Ctrl-P to Display the file browser tree
+nmap <C-P> :NERDTreeToggle<CR>
+" ,p to show current file in the tree
+nmap <leader>p :NERDTreeFind<CR>
+
+" Useful status information at bottom of screen
+set statusline=[%n]\ %<%.99f\ %h%w%m%r%y\ %{exists('*CapsLockStatusline')?CapsLockStatusline():''}%=%-16(\ %l,%c-%v\ %)%P
+
+set visualbell                    " No beeping.
+
+set nobackup                      " Don't make a backup before overwriting a file.
+set nowritebackup                 " And again.
+set directory=$HOME/.vim/tmp//,.  " Keep swap files in one location
+
+set tabstop=2                    " Global tab width.
+set shiftwidth=2                 " And again, related.
+set expandtab                    " Use spaces instead of tabs
+
+set laststatus=2                  " Show the status line all the time
+
+:nmap <C-a> ggVG
+
+" fugitive shortcuts
+noremap <leader>ggs :Gstatus<cr>
+noremap <leader>ggc :Gcommit<cr>
+noremap <leader>gga :Gwrite<cr>
+noremap <leader>ggl :Glog<cr>
+noremap <leader>ggd :Gdiff<cr>
+
+" bundles
+noremap <leader>bi :!bundle install<cr>
+
+" Toggle solarized background
+call togglebg#map("<F2>")
+
+" Reload SnipMate's snippets
+" http://code.google.com/p/snipmate/issues/detail?id=67
+function! ReloadSnippets( snippets_dir, ft )
+    if strlen( a:ft ) == 0
+        let filetype = "_"
+    else
+        let filetype = a:ft
+    endif
+
+    call ResetSnippets(filetype)
+    call GetSnippets( a:snippets_dir, filetype )
+endfunction
+nmap ,rr :call ReloadSnippets(snippets_dir, &filetype)<CR>
+
+" VIM's command window ('q:') and the :options window also set filetype=vim. We
+" do not want folding in these enabled by default, though, because some
+" malformed :if, :function, ... commands would fold away everything from the
+" malformed command until the last command.
+if bufname('') =~# '^\%(' . (v:version < 702 ? 'command-line' : '\[Command Line\]') . '\|option-window\)$'
+  " With this, folding can still be enabled easily via any zm, zc, zi, ...
+  " command.
+  setlocal nofoldenable
+else
+  " Fold settings for ordinary windows.
+  setlocal foldcolumn=4
+endif
+
+set wrap
+set linebreak
+set nolist  " list disables linebreak
+
+map <buffer> <silent> <Leader>d <Plug>ToggleDone
+
+set wildignore+=vendor/**
+set wildignore+=cache/**
+set wildignore+=doc/**
+set wildignore+=markup/**
+set wildignore+=project/**
+let g:CommandTMaxFiles=10000
